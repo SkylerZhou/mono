@@ -1,0 +1,140 @@
+/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/anndata/_core/anndata.py:1818: UserWarning: Observation names are not unique. To make them unique, call `.obs_names_make_unique`.
+  utils.warn_names_duplicates("obs")
+dataset info: ../dataset_full/GSE150992_intersect.h5ad 113682
+Traceback (most recent call last):
+  File "/home/pany3/anaconda3/envs/scleap/bin/torchrun", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 348, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/run.py", line 901, in main
+    run(args)
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 133, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 255, in launch_agent
+    result = agent.run()
+             ^^^^^^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/elastic/metrics/api.py", line 124, in wrapper
+    result = f(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/elastic/agent/server/api.py", line 680, in run
+    result = self._invoke_run(role)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/elastic/agent/server/api.py", line 829, in _invoke_run
+    self._initialize_workers(self._worker_group)
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/elastic/metrics/api.py", line 124, in wrapper
+    result = f(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/elastic/agent/server/api.py", line 652, in _initialize_workers
+    self._rendezvous(worker_group)
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/elastic/metrics/api.py", line 124, in wrapper
+    result = f(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/elastic/agent/server/api.py", line 489, in _rendezvous
+    rdzv_info = spec.rdzv_handler.next_rendezvous()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/elastic/rendezvous/static_tcp_rendezvous.py", line 66, in next_rendezvous
+    self._store = TCPStore(  # type: ignore[call-arg]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: The server socket has failed to listen on any local network address. useIpv6: 0, code: -98, name: EADDRINUSE, message: address already in use
+dataset info: ../dataset_full/Lymphoma_intersect.h5ad 559
+/mnt/isilon/tan_lab/pany3/mono/trainer/trainer.py:170: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(pretrain_path, map_location="cpu")
+/mnt/isilon/tan_lab/pany3/mono/trainer/trainer.py:60: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = torch.cuda.amp.GradScaler()
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/mnt/isilon/tan_lab/pany3/mono/tutorials/start_train.py", line 34, in <module>
+[rank0]:     main()
+[rank0]:   File "/mnt/isilon/tan_lab/pany3/mono/tutorials/start_train.py", line 28, in main
+[rank0]:     trainer.train()
+[rank0]:   File "/mnt/isilon/tan_lab/pany3/mono/trainer/trainer.py", line 87, in train
+[rank0]:     step_forward()
+[rank0]:   File "/mnt/isilon/tan_lab/pany3/mono/trainer/trainer.py", line 68, in step_forward
+[rank0]:     data = {k: v.to(self.device) for k, v in next(dp).items()}
+[rank0]:                                              ^^^^^^^^
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 630, in __next__
+[rank0]:     data = self._next_data()
+[rank0]:            ^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1344, in _next_data
+[rank0]:     return self._process_data(data)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1370, in _process_data
+[rank0]:     data.reraise()
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/_utils.py", line 706, in reraise
+[rank0]:     raise exception
+[rank0]: NotImplementedError: Caught NotImplementedError in DataLoader worker process 0.
+[rank0]: Original Traceback (most recent call last):
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/utils/data/_utils/worker.py", line 309, in _worker_loop
+[rank0]:     data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/utils/data/_utils/fetch.py", line 54, in fetch
+[rank0]:     data = self.dataset[possibly_batched_index]
+[rank0]:            ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/mnt/isilon/tan_lab/pany3/mono/data_provider/dataset.py", line 263, in __getitem__
+[rank0]:     data = self._dataset[index]
+[rank0]:            ~~~~~~~~~~~~~^^^^^^^
+[rank0]:   File "/mnt/isilon/tan_lab/pany3/mono/data_provider/dataset.py", line 219, in __getitem__
+[rank0]:     sample = self.get_sample(hca, row, aug_prob, ratio)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/mnt/isilon/tan_lab/pany3/mono/data_provider/dataset.py", line 169, in get_sample
+[rank0]:     rawcount = self.downsample_v2(rawcount, aug_prob)
+[rank0]:                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/mnt/isilon/tan_lab/pany3/mono/data_provider/dataset.py", line 159, in downsample_v2
+[rank0]:     return rnd.rvs()
+[rank0]:            ^^^^^^^^^
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/scipy/stats/_distn_infrastructure.py", line 532, in rvs
+[rank0]:     return self.dist.rvs(*self.args, **kwds)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/scipy/stats/_distn_infrastructure.py", line 3430, in rvs
+[rank0]:     return super().rvs(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/scipy/stats/_distn_infrastructure.py", line 1089, in rvs
+[rank0]:     cond = logical_and(self._argcheck(*args), (scale >= 0))
+[rank0]:                        ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/scipy/stats/_discrete_distns.py", line 62, in _argcheck
+[rank0]:     return (n >= 0) & _isintegral(n) & (p >= 0) & (p <= 1)
+[rank0]:             ^^^^^^
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/scipy/sparse/_compressed.py", line 335, in __ge__
+[rank0]:     return self._inequality(other, operator.ge, '_ge_',
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/scipy/sparse/_compressed.py", line 285, in _inequality
+[rank0]:     raise NotImplementedError(" >= and <= don't work with 0.")
+[rank0]: NotImplementedError:  >= and <= don't work with 0.
+
+E0903 23:03:13.692000 140737350727488 torch/distributed/elastic/multiprocessing/api.py:833] failed (exitcode: 1) local_rank: 0 (pid: 2912769) of binary: /home/pany3/anaconda3/envs/scleap/bin/python
+Traceback (most recent call last):
+  File "/home/pany3/anaconda3/envs/scleap/bin/torchrun", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 348, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/run.py", line 901, in main
+    run(args)
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 133, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pany3/anaconda3/envs/scleap/lib/python3.12/site-packages/torch/distributed/launcher/api.py", line 264, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/mnt/isilon/tan_lab/pany3/mono/tutorials/start_train.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2024-09-03_23:03:13
+  host      : g-10-04.cm.cluster
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 2912769)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
