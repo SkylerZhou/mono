@@ -22,8 +22,8 @@ class Config:
 
         # for training
         self.mixed_precision = True
-        self.nr_step = 2000
-        self.warmup_step = 50
+        self.nr_step = 1500
+        self.warmup_step = 300
         try:
             import torch
 
@@ -71,7 +71,8 @@ class Config:
     @functools.lru_cache(maxsize=1)
     @ensure_dir
     def model_dir(self):
-        return self.saved_dir / "finetune" / "model_li_1234"
+        return self.saved_dir / "finetune" / "model_temp"
+        # return self.saved_dir / "finetune" / "model_li_1234"
         # return self.saved_dir / "finetune" / "model_test1234"
 
     @property

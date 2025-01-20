@@ -55,13 +55,9 @@ class H5ADReader:
     def __init__(self, path_list):
         self.path_list = path_list
         self.data = {}
-        # mtx = pd.read_csv(os.path.join(cfg.dataset_dir, "shortest_path_integrated_network_setting3_all_genes.csv"), header=0, index_col=0)
-        # gene_list = list(mtx.columns)
-        # self.mtx = mtx.values
         for k in path_list:
             self.data[k] = {}
             hca_temp = sc.read_h5ad(k)
-            # hca_temp = hca_temp[:, hca_temp.var_names.isin(gene_list)][:, gene_list]
             n_cells = hca_temp.n_obs
             shuffled_indices = np.random.permutation(n_cells)
             hca = hca_temp[shuffled_indices].copy()
@@ -104,9 +100,6 @@ class H5ADReader:
         hca = self.data[name]["hca"]
         hca.obs['perturbation'] = pd.Categorical(hca.obs['perturbation'])
         return hca.obs.perturbation.cat.codes.iloc[row]
-    
-    # def get_mask(self, u_cols):
-    #     return self.mtx[u_cols][:, u_cols]
 
 
 class HCADataset(Dataset):
@@ -138,7 +131,7 @@ class HCADataset(Dataset):
                 self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 10 != 0]
                 # self.perturb_rows[k] = [_ for _ in perturb_rows]
             else:
-                self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 50 == 0]
+                self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 10 == 0]
                 # self.perturb_rows[k] = [_ for _ in perturb_rows]
             self.cell_name = self.reader.data[self.hca[0]]['hca'].obs.index[self.perturb_rows[k]]
 
@@ -163,6 +156,9 @@ class HCADataset(Dataset):
         perturb = self.reader.get_perturbation(hca, row)
 
         rawcount = self.reader.get_item(hca, row)
+    
+        if not isinstance(rawcount, np.ndarray):
+            rawcount = rawcount.toarray()
         rawcount = np.squeeze(rawcount.astype(int))
 
         if self.train:
@@ -196,8 +192,8 @@ class HCADataset(Dataset):
             "ds": ds[u_cols],
             "ds_norm": ds_norm[u_cols],
             "perturb": np.array([perturb]),
-            # "mask_attn": self.reader.get_mask(u_cols),
-            "index": u_cols
+            "index": u_cols,
+            # "genes": u_genes
         }
 
     def __getitem__(self, index):
@@ -208,6 +204,7 @@ class HCADataset(Dataset):
         data = []
         mx_len = 0
 
+        # mx_token = 16 * 256 * 16
         mx_token = 16 * 256
 
         for i in range(1024 if self.train else 1):
@@ -218,10 +215,12 @@ class HCADataset(Dataset):
                 row = self.perturb_rows[hca][index]
             sample = self.get_sample(hca, row, aug_prob, ratio)
             cur_len = len(sample["u_token"])
-            if len(data) > 0 and max(mx_len, cur_len) * (len(data) + 1) > mx_token:
+            if len(data) > 0 and max(mx_len, cur_len) * (len(data) + 1) > mx_token: # to ensure one iteration has enough data to train
                 break
             data.append(sample)
             mx_len = max(mx_len, cur_len)
+    
+
 
         def _pad_fn(a, value):
             a = [np.array(_) for _ in a]
@@ -237,14 +236,15 @@ class HCADataset(Dataset):
             "ds": 0,
             "ds_norm": 0.0,
             "perturb": -1,
-            # "mask_attn": 0,
-            "index": 0
+            "index": 0,
+            # "genes": "padding"
         }
 
         ret = {}
         ret["ratio"] = np.array([ratio])
         for key in data[0].keys():
-                ret[key] = _pad_fn([_[key] for _ in data], pad_values[key])
+            ret[key] = _pad_fn([_[key] for _ in data], pad_values[key])
+                
         return ret
 
 
@@ -255,16 +255,31 @@ class TrainDataset(Dataset):
             # [os.path.join(cfg.dataset_dir, "GSE197268_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "Lymphoma_8k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE197268_intersect.h5ad")],
-            [os.path.join(cfg.dataset_dir, "test_rest_5k.h5ad")],
+            # [os.path.join(cfg.dataset_dir, "test_rest_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "9268_rest_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "lym_rest_5k_2.h5ad")],
             # [os.path.join(cfg.dataset_dir, "li_rest_5k_2.h5ad")],
+            # [os.path.join(cfg.dataset_dir, "GSE262072_filtered_5k.h5ad")],
+            [os.path.join(cfg.dataset_dir, "temp_train_ad.h5ad")],
         )
         self._dataset = ds
+        self._cell_name = ds.cell_name
+        self._perturb_all = ds.perturb_all
 
 
     def __getitem__(self, index):
         data = self._dataset[index]
+        # print(data["genes"].shape)
+        # if os.path.exists('train_input_genes.csv'):
+        #     pd.DataFrame(data["genes"]).to_csv('train_input_genes_temp.csv', index=False, header=False)
+        # else:
+        #     pd.DataFrame(data["genes"]).to_csv('train_input_genes.csv', index=False, header=False)
+            
+        # if os.path.exists('train_label.csv'):  
+        #     pd.DataFrame(data["perturb"][:, 0]).to_csv('train_label_temp.csv', index=False, header=False)
+        # else:
+        #     pd.DataFrame(data["perturb"][:, 0]).to_csv('train_label.csv', index=False, header=False)
+        # print(data["perturb"][:, 0])
         return {
             "ratio": torch.tensor(data["ratio"]).long(),
             "u_token": torch.tensor(data["u_token"]).long(),
@@ -284,8 +299,10 @@ class ValidationDataset(Dataset):
             # [os.path.join(cfg.dataset_dir, "GSE197268_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "test_1234_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "9268_1234_5k.h5ad")],
-            [os.path.join(cfg.dataset_dir, "lym_rest_5k.h5ad")],
+            # [os.path.join(cfg.dataset_dir, "lym_rest_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "li_1234_5k.h5ad")],
+            # [os.path.join(cfg.dataset_dir, "GSE262072_filtered_5k.h5ad")],
+            [os.path.join(cfg.dataset_dir, "temp_test_ad.h5ad")],
             train=False,
         )
         self._dataset = ds
@@ -295,6 +312,8 @@ class ValidationDataset(Dataset):
 
     def __getitem__(self, index):
         data = self._dataset[index]
+        # pd.DataFrame(data["genes"]).to_csv('val_input_genes.csv', index=False, header=False)
+        # loaded_matrix = pd.read_csv('matrix.csv', header=None).values
         return {
             "ratio": torch.tensor(data["ratio"]).long(),
             "u_token": torch.tensor(data["u_token"]).long(),

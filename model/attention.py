@@ -1,5 +1,6 @@
 import math
-
+import pandas as pd
+import numpy as np
 import torch
 from torch import nn
 import torch.nn.functional as F
@@ -19,6 +20,8 @@ class ScaledDotProductAttention(nn.Module):
 
         if mask_attn is not None:
             attn += mask_attn
+        
+        # print(F.softmax(attn, dim=-1).shape)
         
         attn = self.dropout(F.softmax(attn, dim=-1))
         output = torch.matmul(attn, v)
@@ -61,6 +64,14 @@ class MultiHeadAttention(nn.Module):
         x, attn_weight = self.attention(q, k, v, bias=bias, mask_attn=mask_attn)
         x = x.transpose(-3, -2)
         x = x.reshape(*x.shape[:-2], -1)
+        
+        # attention_weights = self.fc_out(x)
+        # summed_attention = attention_weights.sum(dim=-1)
+        # # normalized_attention = F.softmax(summed_attention, dim=0)
+        # normalized_attention = summed_attention
+        # np.savetxt('train_attention.csv', normalized_attention.detach().cpu().numpy(), delimiter=",")
+        # print(normalized_attention.shape)
+        # exit()
         x = self.dropout(self.fc_out(x))
         return x
 

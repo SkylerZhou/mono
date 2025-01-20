@@ -1,0 +1,41 @@
+Starting iteration 1
+Test set - perturbation
+RL-    21623
+RL+    18058
+CR      7227
+NR      6482
+Name: count, dtype: int64
+Train set - perturbation
+CR     6499
+NR     6499
+RL+    6499
+RL-    6499
+Name: count, dtype: int64
+['VC06_CD19', 'DC49_CD19', 'VC20_CD19', 'DC66_CD19', 'DC61_CD19', 'VC10_CD19', 'VC04_CD19', 'DC45_CD19', 'VC33_CD19', 'VC16_CD19', 'DC46_CD19', 'DC67_CD19', 'VC34_CD19', 'VC02_CD19', 'DC52_CD19', 'DC82_CD19']
+['VC39_CD19', 'VC02_CD19', 'VC19_CD19', 'VC12_CD19', 'VC05_CD19', 'VC06_CD19', 'VC07_CD19', 'VC34_CD19', 'VC09_CD19', 'VC10_CD19', 'VC32_CD19', 'VC04_CD19', 'VC21_CD19', 'VC15_CD19', 'VC16_CD19', 'VC29_CD19', 'VC18_CD19', 'VC03_CD19', 'VC20_CD19', 'VC13_CD19', 'VC22_CD19', 'VC23_CD19', 'VC24_CD19', 'VC25_CD19', 'VC26_CD19', 'VC27_CD19', 'VC28_CD19', 'VC17_CD19', 'VC30_CD19', 'VC31_CD19', 'VC11_CD19', 'VC33_CD19', 'VC08_CD19', 'VC35_CD19', 'VC36_CD19', 'VC37_CD19', 'VC38_CD19', 'VC01_CD19', 'VC40_CD19', 'DC41_CD19', 'DC42_CD19', 'DC43_CD19', 'DC44_CD19', 'DC45_CD19', 'DC46_CD19', 'DC47_CD19', 'DC48_CD19', 'DC49_CD19', 'DC61_CD19', 'DC51_CD19', 'DC60_CD19', 'DC53_CD19', 'DC54_CD19', 'DC55_CD19', 'DC56_CD19', 'DC57_CD19', 'DC58_CD19', 'DC59_CD19', 'DC52_CD19', 'DC62_CD19', 'DC63_CD19', 'DC64_CD19', 'DC68_CD19', 'DC69_CD19', 'DC70_CD19', 'DC71_CD19', 'DC72_CD19', 'DC73_CD19', 'DC74_CD19', 'DC76_CD19', 'DC78_CD19', 'DC79_CD19', 'DC80_CD19', 'DC81_CD19', 'DC82_CD19', 'DC50_CD19', 'DC65_CD19', 'DC66_CD19', 'DC67_CD19', 'DC75_CD19', 'DC77_CD19']
+W0119 23:21:55.319000 140737350727488 torch/distributed/run.py:779] 
+W0119 23:21:55.319000 140737350727488 torch/distributed/run.py:779] *****************************************
+W0119 23:21:55.319000 140737350727488 torch/distributed/run.py:779] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0119 23:21:55.319000 140737350727488 torch/distributed/run.py:779] *****************************************
+dataset info: ../dataset_full/temp_train_ad.h5ad 23396
+dataset info: ../dataset_full/temp_train_ad.h5ad 23396
+dataset info: ../dataset_full/temp_test_ad.h5ad 5339
+dataset info: ../dataset_full/temp_test_ad.h5ad 5339
+the latestthe latest  -1-1
+
+/mnt/isilon/tan_lab/pany3/mono/trainer/trainer.py:171: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(pretrain_path, map_location="cpu")
+/mnt/isilon/tan_lab/pany3/mono/trainer/trainer.py:171: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  checkpoint = torch.load(pretrain_path, map_location="cpu")
+/mnt/isilon/tan_lab/pany3/mono/trainer/trainer.py:60: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = torch.cuda.amp.GradScaler()
+/mnt/isilon/tan_lab/pany3/mono/trainer/trainer.py:60: FutureWarning: `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
+  scaler = torch.cuda.amp.GradScaler()
+/mnt/isilon/tan_lab/pany3/mono/trainer/trainer.py:69: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(enabled=cfg.mixed_precision):
+/mnt/isilon/tan_lab/pany3/mono/trainer/trainer.py:69: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(enabled=cfg.mixed_precision):
+Train Step: [10/1500], ce_loss: 7.236826, update_loss: 7.236826, top1_acc: 0.000000, top5_acc: 0.008542, top10_acc: 0.020886, top50_acc: 0.252133, top100_acc: 0.521027, Speed: 0.108 m/s, Passed: 0.024 h, Estimate: 3.621 h
+Train Step: [10/1500], ce_loss: 7.236577, update_loss: 7.236577, top1_acc: 0.000000, top5_acc: 0.000000, top10_acc: 0.013579, top50_acc: 0.254692, top100_acc: 0.505911, Speed: 0.108 m/s, Passed: 0.024 h, Estimate: 3.615 h
+Train Step: [20/1500], ce_loss: 6.432567, update_loss: 6.432567, top1_acc: 0.280177, top5_acc: 0.979069, top10_acc: 0.998698, top50_acc: 1.000000, top100_acc: 1.000000, Speed: 0.111 m/s, Passed: 0.048 h, Estimate: 3.558 h
+Train Step: [20/1500], ce_loss: 6.446090, update_loss: 6.446090, top1_acc: 0.224280, top5_acc: 0.977970, top10_acc: 0.993674, top50_acc: 1.000000, top100_acc: 1.000000, Speed: 0.111 m/s, Passed: 0.048 h, Estimate: 3.561 h

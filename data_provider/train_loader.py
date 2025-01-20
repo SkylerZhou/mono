@@ -28,6 +28,5 @@ class TrainLoader(DataLoader):
             batch_size=None,
             sampler=self._sampler,
             num_workers=6,
-            # num_workers=0,
             pin_memory=True,
         )

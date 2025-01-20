@@ -41,20 +41,24 @@ def load_model(step):
     return model
 
 
-def _load_fn(model):
+def _load_fn(model, checkpoint):
     data_list, label_list = [], []
     cell_name = []
     
     vl = ValidationLoader()
     dataset = vl._dataset
-    perturb_list = dataset._perturb_all
+    # perturb_list = dataset._perturb_all
+    tl = TrainLoader()
+    perturb_list = tl._dataset._perturb_all
     cat_len = len(perturb_list.astype('category').cat.categories.tolist())
+    
     
     out_array = np.empty((0, cat_len))
     
-    file_path = "results.csv"
+    file_path = "../results/results_" + checkpoint + ".csv"
 
-    for i, data in enumerate(tqdm(vl)):
+    # for i, data in enumerate(tqdm(vl)):
+    for i, data in enumerate(vl):
         
         if torch.cuda.is_available():
             data = {k: v.cuda() for k, v in data.items()}
@@ -89,7 +93,7 @@ def evaluate(checkpoint):
     if torch.cuda.is_available():
         model = model.cuda()
 
-    _load_fn(model)
+    _load_fn(model, checkpoint)
 
 
 if __name__ == "__main__":
