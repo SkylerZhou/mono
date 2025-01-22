@@ -41,7 +41,7 @@ def load_model(step):
     return model
 
 
-def _load_fn(model, checkpoint):
+def _load_fn(model, checkpoint, path):
     data_list, label_list = [], []
     cell_name = []
     
@@ -55,7 +55,7 @@ def _load_fn(model, checkpoint):
     
     out_array = np.empty((0, cat_len))
     
-    file_path = "../results/results_" + checkpoint + ".csv"
+    file_path = path + "/results_" + checkpoint + ".csv"
 
     # for i, data in enumerate(tqdm(vl)):
     for i, data in enumerate(vl):
@@ -83,7 +83,11 @@ def _load_fn(model, checkpoint):
 @click.option(
     "-c", "--checkpoint", help="Step to evaluate (e.g. 100000)", required=True
 )
-def evaluate(checkpoint):
+@click.option(
+    "-p", "--path", help="Path to save the results file", required=True
+)
+
+def evaluate(checkpoint, path):
     """
     Test checkpoint
     """
@@ -93,7 +97,7 @@ def evaluate(checkpoint):
     if torch.cuda.is_available():
         model = model.cuda()
 
-    _load_fn(model, checkpoint)
+    _load_fn(model, checkpoint, path)
 
 
 if __name__ == "__main__":

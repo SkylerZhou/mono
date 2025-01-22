@@ -3,12 +3,32 @@
 # Read arguments from the command line
 adata_file_path=$1
 num=$2
-test_name=$3
+test=$3
 
 # Repeat the Python processing 5 times
-rm -rf ../dataset_full/finetune/model_temp
-for i in {1..5}
+
+folder_path="../results/$test"
+
+file_name="../common/config.json"
+
+echo "{
+    \"saved_dir\": \"$folder_path\"
+}" > $file_name
+
+# # Confirm the file was created
+# if [ -f "$file_name" ]; then
+#     echo "JSON file '$file_name' created successfully."
+# else
+#     echo "Failed to create JSON file."
+# fi
+
+for i in {1}
 do
+    if [ -d "$folder_path" ]; then
+        rm -rf "$folder_path"/*
+    else
+        mkdir -p "$folder_path"
+    fi
 
     echo "Starting iteration $i"
     python - <<END
@@ -69,13 +89,13 @@ while True:
 # Save the split datasets with iteration index
 print(selected_patients)
 print(patients)
-train_ad.write('../dataset_full/temp_train_ad.h5ad')
-test_ad.write('../dataset_full/temp_test_ad.h5ad')
+train_ad.write('$folder_path/temp_train_ad.h5ad')
+test_ad.write('$folder_path/temp_test_ad.h5ad')
 END
     
 
     # Run subsequent scripts once after all iterations
-    bash launch_train.sh
+    bash launch_train.sh $test
     #!/bin/bash
 
     parameters=(100 500 1000 1500)
@@ -83,11 +103,10 @@ END
     for param in "${parameters[@]}"
     do
         echo "Running steps $param"
-        python load_results.py -c $param
-        python cell2patient.py -csv "../results/results_${param}.csv" -adata "../dataset_full/temp_test_ad.h5ad"
+        python load_results.py -c $param -p $folder_path
+        python cell2patient.py -csv "$folder_path/results_${param}.csv" -adata ".$folder_path/temp_test_ad.h5ad"
         # python cell2patient_binom.py -c ${param}
     done
-    rm -rf ../dataset_full/finetune/model_temp
 
     echo "--------------------------Completed iteration $i------------------------------------"
 done

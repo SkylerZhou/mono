@@ -2,6 +2,7 @@ import os
 import hashlib
 import functools
 from pathlib import Path
+import json
 
 import yaml
 import numpy as np
@@ -23,7 +24,7 @@ class Config:
         # for training
         self.mixed_precision = True
         self.nr_step = 1500
-        self.warmup_step = 300
+        self.warmup_step = 100
         try:
             import torch
 
@@ -37,7 +38,14 @@ class Config:
 
         # for checkpoint
         self.chk_time_interval = 3600
-        self.chk_step_interval = [50]
+        self.chk_step_interval = [200]
+        
+        # for path
+        # self.saved_path = Path(f"../dataset_full")
+        with open(Path(f'../common/config.json'), 'r') as file:
+            config_data = json.load(file)
+        self.saved_dir = Path(config_data.get("saved_dir"))
+        self.pretrained_dir = Path(f'../dataset_full')
 
 
     def _create_logger(self, path, **kwargs):
@@ -51,15 +59,15 @@ class Config:
     @property
     @functools.lru_cache(maxsize=1)
     def dataset_dir(self):
-        path = Path(f"../dataset_full")
-        if path.exists():
-            return path
+        if self.saved_dir.exists():
+            return self.saved_dir
         raise Exception("DatasetNotFoundError")
 
-    @property
-    @ensure_dir
-    def saved_dir(self):
-        return Path(f"../dataset_full/")
+    # @property
+    # @ensure_dir
+    # def saved_dir(self):
+    #     # return self.config_data.get("saved_dir")
+    #     return self.saved_dir
 
     @property
     @functools.lru_cache(maxsize=1)
@@ -72,13 +80,11 @@ class Config:
     @ensure_dir
     def model_dir(self):
         return self.saved_dir / "finetune" / "model_temp"
-        # return self.saved_dir / "finetune" / "model_li_1234"
-        # return self.saved_dir / "finetune" / "model_test1234"
 
     @property
     @functools.lru_cache(maxsize=1)
     def pretrain_model_dir(self):
-        return self.saved_dir / "pretrain" / "model"
+        return self.pretrained_dir / "pretrain" / "model"
     
     @property
     @functools.lru_cache(maxsize=1)

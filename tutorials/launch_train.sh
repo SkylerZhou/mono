@@ -1,5 +1,6 @@
 # !/bin/bash
 HERE="$(dirname "$(readlink -f "$0")")"
+test=$1
 # export RANK=0
 # export LOCAL_RANK=0
 # export MASTER_ADDR=127.0.0.1
@@ -11,9 +12,9 @@ if [ -z $WORLD_SIZE ]; then
   # export MASTER_PORT=12358
 
   torchrun --nproc_per_node=${GPU_COUNT} \
-  	   $HERE/start_train.py
+  	   $HERE/start_train.py --test test
 else
-  python $HERE/start_train.py
+  python $HERE/start_train.py --test test
 fi
 
-# python $HERE/start_train.py
+# python $HERE/start_train.py --test test

@@ -5,27 +5,33 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 import torch
+import click
+
+@click.command()
+@click.option("--test", required=True, help="test name")
 
 
-def main():
+def main(test):
     world_size = int(os.environ["WORLD_SIZE"])
+    print(world_size)
     world_rank = int(os.environ["RANK"])
     local_rank = int(os.environ["LOCAL_RANK"])
     master_ip = os.environ["MASTER_ADDR"]
     master_port = os.environ["MASTER_PORT"]
 
     master_uri = "tcp://%s:%s" % (master_ip, master_port)
+    print(master_uri)
     torch.distributed.init_process_group(
-        # backend="nccl",
+        backend="nccl",
         init_method=master_uri,
         world_size=world_size,
         rank=world_rank,
     )
-    # torch.cuda.set_device(local_rank)
+    torch.cuda.set_device(local_rank)
     from trainer import Trainer
 
     with Trainer(local_rank, world_rank) as trainer:
-        trainer.train()
+        trainer.train(test)
 
     torch.distributed.destroy_process_group()
 

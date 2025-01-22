@@ -53,7 +53,7 @@ class Trainer:
         for g in self.optimizer.param_groups:
             g["lr"] = lr
 
-    def train(self):
+    def train(self, test):
         dp = iter(self.dp)
         cur_time = last_saved_time = start_time = time.time()
         n_trained = 0
@@ -67,6 +67,7 @@ class Trainer:
                 nonlocal dp, scaler
                 data = {k: v.to(self.device) for k, v in next(dp).items()}
                 with torch.cuda.amp.autocast(enabled=cfg.mixed_precision):
+                # with torch.amp.autocast(enabled=cfg.mixed_precision):
                     output = self.model(data)
                     losses = {k: v for k, v in output.items() if k.endswith("loss")}
                     metrics = {
