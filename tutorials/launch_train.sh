@@ -11,7 +11,7 @@ if [ -z $WORLD_SIZE ]; then
   # export MASTER_ADDR=127.0.0.1
   # export MASTER_PORT=12358
 
-  torchrun --nproc_per_node=${GPU_COUNT} \
+  torchrun --nproc_per_node=${GPU_COUNT} --master_port=29501\
   	   $HERE/start_train.py --test test
 else
   python $HERE/start_train.py --test test

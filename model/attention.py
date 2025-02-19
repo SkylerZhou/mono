@@ -4,6 +4,7 @@ import numpy as np
 import torch
 from torch import nn
 import torch.nn.functional as F
+from common import config as cfg
 
 
 class ScaledDotProductAttention(nn.Module):
@@ -65,13 +66,13 @@ class MultiHeadAttention(nn.Module):
         x = x.transpose(-3, -2)
         x = x.reshape(*x.shape[:-2], -1)
         
-        # attention_weights = self.fc_out(x)
-        # summed_attention = attention_weights.sum(dim=-1)
-        # # normalized_attention = F.softmax(summed_attention, dim=0)
-        # normalized_attention = summed_attention
-        # np.savetxt('train_attention.csv', normalized_attention.detach().cpu().numpy(), delimiter=",")
-        # print(normalized_attention.shape)
-        # exit()
+        attention_weights = self.fc_out(x)
+        summed_attention = attention_weights.sum(dim=-1)
+        # normalized_attention = F.softmax(summed_attention, dim=0)
+        normalized_attention = summed_attention
+        np.savetxt(cfg.saved_dir / 'train_attention.csv', normalized_attention.detach().cpu().numpy(), delimiter=",")
+        print(normalized_attention.shape)
+        exit()
         x = self.dropout(self.fc_out(x))
         return x
 

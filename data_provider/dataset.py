@@ -193,7 +193,7 @@ class HCADataset(Dataset):
             "ds_norm": ds_norm[u_cols],
             "perturb": np.array([perturb]),
             "index": u_cols,
-            # "genes": u_genes
+            "genes": u_genes
         }
 
     def __getitem__(self, index):
@@ -237,7 +237,7 @@ class HCADataset(Dataset):
             "ds_norm": 0.0,
             "perturb": -1,
             "index": 0,
-            # "genes": "padding"
+            "genes": "padding"
         }
 
         ret = {}
@@ -269,17 +269,17 @@ class TrainDataset(Dataset):
 
     def __getitem__(self, index):
         data = self._dataset[index]
-        # print(data["genes"].shape)
-        # if os.path.exists('train_input_genes.csv'):
-        #     pd.DataFrame(data["genes"]).to_csv('train_input_genes_temp.csv', index=False, header=False)
-        # else:
-        #     pd.DataFrame(data["genes"]).to_csv('train_input_genes.csv', index=False, header=False)
+        print(data["genes"].shape)
+        if os.path.exists(cfg.saved_dir / 'train_input_genes.csv'):
+            pd.DataFrame(data["genes"]).to_csv(cfg.saved_dir / 'train_input_genes_temp.csv', index=False, header=False)
+        else:
+            pd.DataFrame(data["genes"]).to_csv(cfg.saved_dir / 'train_input_genes.csv', index=False, header=False)
             
-        # if os.path.exists('train_label.csv'):  
-        #     pd.DataFrame(data["perturb"][:, 0]).to_csv('train_label_temp.csv', index=False, header=False)
-        # else:
-        #     pd.DataFrame(data["perturb"][:, 0]).to_csv('train_label.csv', index=False, header=False)
-        # print(data["perturb"][:, 0])
+        if os.path.exists(cfg.saved_dir / 'train_label.csv'):  
+            pd.DataFrame(data["perturb"][:, 0]).to_csv(cfg.saved_dir / 'train_label_temp.csv', index=False, header=False)
+        else:
+            pd.DataFrame(data["perturb"][:, 0]).to_csv(cfg.saved_dir / 'train_label.csv', index=False, header=False)
+        print(data["perturb"][:, 0])
         return {
             "ratio": torch.tensor(data["ratio"]).long(),
             "u_token": torch.tensor(data["u_token"]).long(),

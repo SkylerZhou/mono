@@ -1,3 +1,5 @@
 __pycache__/
 dataset_full/
 results/
+nohup.out
+tutorials/nohup.out
