@@ -66,8 +66,8 @@ class Trainer:
             def step_forward():
                 nonlocal dp, scaler
                 data = {k: v.to(self.device) for k, v in next(dp).items()}
-                with torch.cuda.amp.autocast(enabled=cfg.mixed_precision):
-                # with torch.amp.autocast(enabled=cfg.mixed_precision):
+                # with torch.cuda.amp.autocast(enabled=cfg.mixed_precision):
+                with torch.amp.autocast('cuda', enabled = cfg.mixed_precision):
                     output = self.model(data)
                     losses = {k: v for k, v in output.items() if k.endswith("loss")}
                     metrics = {
@@ -169,7 +169,8 @@ class Trainer:
             )
             if self.world_rank == 0:
                 self.logger.info(f"Loading pretrain checkpoint: {pretrain_path} ...")
-            checkpoint = torch.load(pretrain_path, map_location="cpu")
+            # checkpoint = torch.load(pretrain_path, map_location="cpu")
+            checkpoint = torch.load(pretrain_path, map_location="cpu", weights_only=True)
             parsed_dict = {}
             for k, v in checkpoint["state_dict"].items():
                 if k.startswith("module."):

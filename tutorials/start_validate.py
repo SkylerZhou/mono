@@ -30,7 +30,7 @@ def get_checkpoint_path(step):
 def load_model(step):
     model = model_fn()
     checkpoint_path = get_checkpoint_path(step)
-    checkpoint = torch.load(checkpoint_path, map_location=torch.device("cpu"))
+    checkpoint = torch.load(checkpoint_path, map_location=torch.device("cpu"), weights_only=True)
     parsed_dict = {}
     for k, v in checkpoint["state_dict"].items():
         if k.startswith("module."):

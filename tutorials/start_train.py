@@ -13,7 +13,6 @@ import click
 
 def main(test):
     world_size = int(os.environ["WORLD_SIZE"])
-    print(world_size)
     world_rank = int(os.environ["RANK"])
     local_rank = int(os.environ["LOCAL_RANK"])
     master_ip = os.environ["MASTER_ADDR"]

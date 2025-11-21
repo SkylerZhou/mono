@@ -58,6 +58,7 @@ class H5ADReader:
         for k in path_list:
             self.data[k] = {}
             hca_temp = sc.read_h5ad(k)
+            # hca_temp = hca_temp[hca_temp.obs['data'] == 'Deng', :].copy()
             n_cells = hca_temp.n_obs
             shuffled_indices = np.random.permutation(n_cells)
             hca = hca_temp[shuffled_indices].copy()
@@ -131,8 +132,8 @@ class HCADataset(Dataset):
                 self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 10 != 0]
                 # self.perturb_rows[k] = [_ for _ in perturb_rows]
             else:
-                self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 20 == 0]
-                # self.perturb_rows[k] = [_ for _ in perturb_rows]
+                # self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 10 == 0]
+                self.perturb_rows[k] = [_ for _ in perturb_rows]
             self.cell_name = self.reader.data[self.hca[0]]['hca'].obs.index[self.perturb_rows[k]]
 
             print(f"dataset info: {k} {len(self.perturb_rows[k])}")
@@ -172,7 +173,7 @@ class HCADataset(Dataset):
 
         if self.train and u_cols.shape[0] > 2048:
             u_cols = np.random.choice(u_cols, 2048, replace=False)
-        u_genes = self.reader.get_gene(hca, u_cols)
+        # u_genes = self.reader.get_gene(hca, u_cols)
         
         def normalize(x):
             eps = 1e-12
@@ -193,7 +194,7 @@ class HCADataset(Dataset):
             "ds_norm": ds_norm[u_cols],
             "perturb": np.array([perturb]),
             "index": u_cols,
-            "genes": u_genes
+            # "genes": u_genes
         }
 
     def __getitem__(self, index):
@@ -204,7 +205,6 @@ class HCADataset(Dataset):
         data = []
         mx_len = 0
 
-        # mx_token = 16 * 256 * 16
         mx_token = 16 * 256
 
         for i in range(1024 if self.train else 1):
@@ -237,7 +237,7 @@ class HCADataset(Dataset):
             "ds_norm": 0.0,
             "perturb": -1,
             "index": 0,
-            "genes": "padding"
+            # "genes": "padding"
         }
 
         ret = {}
@@ -253,14 +253,14 @@ class TrainDataset(Dataset):
         ds = HCADataset(
             # [os.path.join(cfg.dataset_dir, "GSE197268_scleap.h5ad")]
             # [os.path.join(cfg.dataset_dir, "GSE197268_5k.h5ad")],
-            # [os.path.join(cfg.dataset_dir, "Lymphoma_8k.h5ad")],
+            # [os.path.join(cfg.dataset_dir, "lymphoma_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE197268_intersect.h5ad")],
             # [os.path.join(cfg.dataset_dir, "test_rest_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "9268_rest_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "lym_rest_5k_2.h5ad")],
             # [os.path.join(cfg.dataset_dir, "li_rest_5k_2.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE262072_filtered_5k.h5ad")],
-            [os.path.join(cfg.dataset_dir, "temp_train_ad.h5ad")],
+             [os.path.join(cfg.dataset_dir, "results/Bai/temp_train_ad.h5ad")],
         )
         self._dataset = ds
         self._cell_name = ds.cell_name
@@ -269,17 +269,17 @@ class TrainDataset(Dataset):
 
     def __getitem__(self, index):
         data = self._dataset[index]
-        print(data["genes"].shape)
-        if os.path.exists(cfg.saved_dir / 'train_input_genes.csv'):
-            pd.DataFrame(data["genes"]).to_csv(cfg.saved_dir / 'train_input_genes_temp.csv', index=False, header=False)
-        else:
-            pd.DataFrame(data["genes"]).to_csv(cfg.saved_dir / 'train_input_genes.csv', index=False, header=False)
+        # print(data["genes"].shape)
+        # if os.path.exists(cfg.saved_dir / 'train_input_genes.csv'):
+        #     pd.DataFrame(data["genes"]).to_csv(cfg.saved_dir / 'train_input_genes_temp.csv', index=False, header=False)
+        # else:
+        #     pd.DataFrame(data["genes"]).to_csv(cfg.saved_dir / 'train_input_genes.csv', index=False, header=False)
             
-        if os.path.exists(cfg.saved_dir / 'train_label.csv'):  
-            pd.DataFrame(data["perturb"][:, 0]).to_csv(cfg.saved_dir / 'train_label_temp.csv', index=False, header=False)
-        else:
-            pd.DataFrame(data["perturb"][:, 0]).to_csv(cfg.saved_dir / 'train_label.csv', index=False, header=False)
-        print(data["perturb"][:, 0])
+        # if os.path.exists(cfg.saved_dir / 'train_label.csv'):  
+        #     pd.DataFrame(data["perturb"][:, 0]).to_csv(cfg.saved_dir / 'train_label_temp.csv', index=False, header=False)
+        # else:
+        #     pd.DataFrame(data["perturb"][:, 0]).to_csv(cfg.saved_dir / 'train_label.csv', index=False, header=False)
+        # print(data["perturb"][:, 0])
         return {
             "ratio": torch.tensor(data["ratio"]).long(),
             "u_token": torch.tensor(data["u_token"]).long(),
@@ -295,14 +295,16 @@ class ValidationDataset(Dataset):
             # [os.path.join(cfg.dataset_dir, "GSE197268_scleap.h5ad")],
             # [os.path.join(cfg.dataset_dir, "Lymphora_scleap.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE150992_intersect_lym_sample.h5ad")],
-            # [os.path.join(cfg.dataset_dir, "Lymphoma_8k.h5ad")],
+            # [os.path.join(cfg.dataset_dir, "lymphoma_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE197268_5k.h5ad")],
+            # [os.path.join(cfg.dataset_dir, "GSE150992_5k_new.h5ad")],
             # [os.path.join(cfg.dataset_dir, "test_1234_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "9268_1234_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "lym_rest_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "li_1234_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE262072_filtered_5k.h5ad")],
-            [os.path.join(cfg.dataset_dir, "temp_test_ad.h5ad")],
+            # [os.path.join(cfg.dataset_dir, "temp_test_ad.h5ad")],
+            [os.path.join(cfg.dataset_dir, "results/Bai/temp_test_ad.h5ad")],
             train=False,
         )
         self._dataset = ds

@@ -38,13 +38,14 @@ class Config:
 
         # for checkpoint
         self.chk_time_interval = 3600
-        self.chk_step_interval = [200]
+        self.chk_step_interval = [50]
         
         # for path
         # self.saved_path = Path(f"../dataset_full")
-        with open(Path(f'../common/config.json'), 'r') as file:
-            config_data = json.load(file)
-        self.saved_dir = Path(config_data.get("saved_dir"))
+        # with open(Path(f'../common/config.json'), 'r') as file:
+        #     config_data = json.load(file)
+        # self.saved_dir = Path(config_data.get("saved_dir"))
+        self.saved_dir = Path(f'../dataset_full')
         self.pretrained_dir = Path(f'../dataset_full')
 
 
@@ -79,7 +80,8 @@ class Config:
     @functools.lru_cache(maxsize=1)
     @ensure_dir
     def model_dir(self):
-        return self.saved_dir / "finetune" / "model_temp"
+        # return self.saved_dir / "finetune" / "model_GSE197268_pretrain"
+        return self.saved_dir / "results" / "Bai" / "finetune" / "model_temp"
 
     @property
     @functools.lru_cache(maxsize=1)

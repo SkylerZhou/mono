@@ -16,5 +16,3 @@ if [ -z $WORLD_SIZE ]; then
 else
   python $HERE/start_train.py --test test
 fi
-
-# python $HERE/start_train.py --test test
