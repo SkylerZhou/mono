@@ -78,6 +78,13 @@ def _validate_fn(model):
     cm = confusion_matrix(data_list, out_list)
     print(cm)
 
+    # Save confusion matrix to data/output/
+    output_dir = os.path.join("data", "output")
+    os.makedirs(output_dir, exist_ok=True)
+    cm_path = os.path.join(output_dir, "confusion_matrix.txt")
+    np.savetxt(cm_path, cm, fmt='%d')
+    print(f"Confusion matrix saved to {cm_path}")
+
 
 @click.command()
 @click.option(

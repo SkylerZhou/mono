@@ -132,8 +132,8 @@ class HCADataset(Dataset):
                 self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 10 != 0]
                 # self.perturb_rows[k] = [_ for _ in perturb_rows]
             else:
-                # self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 10 == 0]
-                self.perturb_rows[k] = [_ for _ in perturb_rows]
+                self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 10 == 0]
+                # self.perturb_rows[k] = [_ for _ in perturb_rows]
             self.cell_name = self.reader.data[self.hca[0]]['hca'].obs.index[self.perturb_rows[k]]
 
             print(f"dataset info: {k} {len(self.perturb_rows[k])}")
@@ -252,7 +252,7 @@ class TrainDataset(Dataset):
     def __init__(self):
         ds = HCADataset(
             # [os.path.join(cfg.dataset_dir, "GSE197268_scleap.h5ad")]
-            [os.path.join(cfg.dataset_dir, "GSE197268_5k.h5ad")],
+            [os.path.join(cfg.dataset_dir, "input/GSE197268_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "lymphoma_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE197268_intersect.h5ad")],
             # [os.path.join(cfg.dataset_dir, "test_rest_5k.h5ad")],
@@ -296,7 +296,7 @@ class ValidationDataset(Dataset):
             # [os.path.join(cfg.dataset_dir, "Lymphora_scleap.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE150992_intersect_lym_sample.h5ad")],
             # [os.path.join(cfg.dataset_dir, "lymphoma_5k.h5ad")],
-            [os.path.join(cfg.dataset_dir, "GSE197268_5k.h5ad")],
+            [os.path.join(cfg.dataset_dir, "input/GSE197268_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE150992_5k_new.h5ad")],
             # [os.path.join(cfg.dataset_dir, "test_1234_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "9268_1234_5k.h5ad")],

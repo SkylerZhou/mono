@@ -45,8 +45,8 @@ class Config:
         # with open(Path(f'../common/config.json'), 'r') as file:
         #     config_data = json.load(file)
         # self.saved_dir = Path(config_data.get("saved_dir"))
-        self.saved_dir = Path(f'../data')
-        self.pretrained_dir = Path(f'../data/input')
+        self.saved_dir = Path(f'data')
+        self.pretrained_dir = Path(f'data/input')
 
 
     def _create_logger(self, path, **kwargs):
@@ -86,7 +86,8 @@ class Config:
     @property
     @functools.lru_cache(maxsize=1)
     def pretrain_model_dir(self):
-        return self.pretrained_dir / "pretrain" / "model"
+        # return self.pretrained_dir / "pretrain" / "model"
+        return self.pretrained_dir 
     
     @property
     @functools.lru_cache(maxsize=1)
