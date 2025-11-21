@@ -132,7 +132,7 @@ class HCADataset(Dataset):
                 self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 10 != 0]
                 # self.perturb_rows[k] = [_ for _ in perturb_rows]
             else:
-                self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 10 == 0]
+                self.perturb_rows[k] = [_ for _ in perturb_rows if _ % 50 == 0]
                 # self.perturb_rows[k] = [_ for _ in perturb_rows]
             self.cell_name = self.reader.data[self.hca[0]]['hca'].obs.index[self.perturb_rows[k]]
 
