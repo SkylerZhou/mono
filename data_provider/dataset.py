@@ -252,7 +252,7 @@ class TrainDataset(Dataset):
     def __init__(self):
         ds = HCADataset(
             # [os.path.join(cfg.dataset_dir, "GSE197268_scleap.h5ad")]
-            # [os.path.join(cfg.dataset_dir, "GSE197268_5k.h5ad")],
+            [os.path.join(cfg.dataset_dir, "GSE197268_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "lymphoma_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE197268_intersect.h5ad")],
             # [os.path.join(cfg.dataset_dir, "test_rest_5k.h5ad")],
@@ -260,7 +260,7 @@ class TrainDataset(Dataset):
             # [os.path.join(cfg.dataset_dir, "lym_rest_5k_2.h5ad")],
             # [os.path.join(cfg.dataset_dir, "li_rest_5k_2.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE262072_filtered_5k.h5ad")],
-             [os.path.join(cfg.dataset_dir, "results/Bai/temp_train_ad.h5ad")],
+            #  [os.path.join(cfg.dataset_dir, "results/Bai/temp_train_ad.h5ad")],
         )
         self._dataset = ds
         self._cell_name = ds.cell_name
@@ -296,7 +296,7 @@ class ValidationDataset(Dataset):
             # [os.path.join(cfg.dataset_dir, "Lymphora_scleap.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE150992_intersect_lym_sample.h5ad")],
             # [os.path.join(cfg.dataset_dir, "lymphoma_5k.h5ad")],
-            # [os.path.join(cfg.dataset_dir, "GSE197268_5k.h5ad")],
+            [os.path.join(cfg.dataset_dir, "GSE197268_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE150992_5k_new.h5ad")],
             # [os.path.join(cfg.dataset_dir, "test_1234_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "9268_1234_5k.h5ad")],
@@ -304,7 +304,6 @@ class ValidationDataset(Dataset):
             # [os.path.join(cfg.dataset_dir, "li_1234_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "GSE262072_filtered_5k.h5ad")],
             # [os.path.join(cfg.dataset_dir, "temp_test_ad.h5ad")],
-            [os.path.join(cfg.dataset_dir, "results/Bai/temp_test_ad.h5ad")],
             train=False,
         )
         self._dataset = ds

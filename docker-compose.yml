@@ -1,0 +1,13 @@
+version: '3.9'
+
+services:
+  hackathon-python:
+    env_file:
+      - dev.env
+    image: hackathon/python
+    volumes:
+      - ./data:/service/data
+    container_name: hackathon-python
+    build:
+      context: .
+      dockerfile: ./Dockerfile
